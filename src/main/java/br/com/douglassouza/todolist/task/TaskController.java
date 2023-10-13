@@ -20,15 +20,15 @@ public class TaskController {
     private ITaskRepository taskRepository;
     
     @PostMapping("/")
-    public ResponseEntity<TaskModel> createTask(@RequestBody TaskModel taskModel, HttpServletRequest request){
+    public ResponseEntity<?> createTask(@RequestBody TaskModel taskModel, HttpServletRequest request){
     
         var idUser = (UUID) request.getAttribute("idUser");
         taskModel.setIdUser(idUser);
 
         var currentDate = LocalDateTime.now();
-       if(currentDate.isAfter(taskModel.getEndAt())){
-           return ResponseEntity.badRequest().build();
-         }
+        if(currentDate.isAfter(taskModel.getEndAt()) || currentDate.isAfter(taskModel.getStartAt()) ){
+            return ResponseEntity.badRequest().body("Data de inicio ou termino não pode ser menor que a data atual");
+        }
     
         this.taskRepository.save(taskModel);
         return ResponseEntity.ok(taskModel);
