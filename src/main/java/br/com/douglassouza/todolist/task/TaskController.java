@@ -1,5 +1,6 @@
 package br.com.douglassouza.todolist.task;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class TaskController {
     
         var idUser = (UUID) request.getAttribute("idUser");
         taskModel.setIdUser(idUser);
+
+        var currentDate = LocalDateTime.now();
+       if(currentDate.isAfter(taskModel.getEndAt())){
+           return ResponseEntity.badRequest().build();
+         }
     
         this.taskRepository.save(taskModel);
         return ResponseEntity.ok(taskModel);
