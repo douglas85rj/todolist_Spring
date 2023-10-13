@@ -49,5 +49,9 @@ public class UserModel {
         return password;
     }
 
+    public Object getId() {
+        return id;
+    }
+
 
 }
